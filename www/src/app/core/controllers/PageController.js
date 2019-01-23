@@ -41,21 +41,6 @@ export default class PageController {
     this.applyFilters();
   }
 
-  ssoLogin(code, success, failure) {
-      var url = angular.isDefined(code)  ? './api/ssoLogin?code=' + code : './api/ssoLogin';
-      $http.post(url,
-          { }).success(function(data, status, headers, config) {
-
-          if (angular.isFunction(success)) {
-              success(data, status, headers, config);
-          }
-      }).error(function(data, status, headers, config) {
-          if (angular.isFunction(failure)) {
-              failure(data, status, headers, config);
-          }
-      });
-  }
-
   buildQuery() {}
   load() {}
 }
