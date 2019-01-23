@@ -15,7 +15,15 @@ const loginPageModule = angular
   })
   .component('loginPage', {
     controller: LoginController,
-    templateUrl: tpl
+    templateUrl: tpl,
+    resolve: {
+        appConfig: function(VersionSrv) {
+                     return VersionSrv.get();
+                  }
+    },
+    params: {
+        autoLogin: false
+    },
   });
 
 export default loginPageModule;
