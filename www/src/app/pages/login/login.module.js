@@ -16,14 +16,14 @@ const loginPageModule = angular
   .component('loginPage', {
     controller: LoginController,
     templateUrl: tpl,
-    resolve: {
-        appConfig: function(VersionSrv) {
-                     return VersionSrv.get();
-                  }
-    },
-    params: {
-        autoLogin: false
-    },
+    // resolve: {
+    //     appConfig: function(VersionSrv) {
+    //                  return VersionSrv.get();
+    //               }
+    // },
+    // params: {
+    //     autoLogin: false
+    // },
   });
 
 export default loginPageModule;

@@ -43,7 +43,6 @@ export default class LoginController {
           this.NotificationService.log(err.data.message, 'error');
         }
       });
-
   }
 
   ssoLogin(code) {
