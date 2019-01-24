@@ -11,7 +11,7 @@ import play.api.libs.ws.WSClient
 import play.api.mvc.RequestHeader
 import play.api.{ Configuration, Logger }
 import org.thp.cortex.services.UserSrv
-import services.mappers.UserMapper
+import org.thp.cortex.services.mappers.UserMapper
 
 import scala.concurrent.{ ExecutionContext, Future }
 

@@ -16,6 +16,8 @@ libraryDependencies ++= Seq(
   Dependencies.zip4j
 )
 
+libraryDependencies += ws
+
 resolvers += Resolver.sbtPluginRepo("releases")
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 resolvers += "elasticsearch-releases" at "https://artifacts.elastic.co/maven"

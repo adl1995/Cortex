@@ -15,6 +15,7 @@ import org.elastic4play.models.BaseModelDef
 import org.elastic4play.services.auth.MultiAuthSrv
 import org.elastic4play.services.{ AuthSrv, MigrationOperations }
 import org.thp.cortex.controllers.{ AssetCtrl, AssetCtrlDev, AssetCtrlProd }
+import org.thp.cortex.services.{ MultiUserMapperSrv, UserMapper }
 
 class Module(environment: Environment, configuration: Configuration) extends AbstractModule with ScalaModule with AkkaGuiceSupport {
 
@@ -23,6 +24,7 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
   override def configure(): Unit = {
     val modelBindings = ScalaMultibinder.newSetBinder[BaseModelDef](binder)
     val auditedModelBindings = ScalaMultibinder.newSetBinder[AuditedModel](binder)
+    val ssoMapperBindings = ScalaMultibinder.newSetBinder[UserMapper](binder)
     val reflectionClasses = new Reflections(new ConfigurationBuilder()
       .forPackages("org.elastic4play")
       .addClassLoader(getClass.getClassLoader)
@@ -53,6 +55,14 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
         authBindings.addBinding.to(authSrvClass)
       }
 
+
+    reflectionClasses
+      .getSubTypesOf(classOf[UserMapper])
+      .asScala
+      .filterNot(c ⇒ java.lang.reflect.Modifier.isAbstract(c.getModifiers) || c.isMemberClass)
+      .filterNot(c ⇒ c == classOf[MultiUserMapperSrv])
+      .foreach(mapperCls ⇒ ssoMapperBindings.addBinding.to(mapperCls))
+
     if (environment.mode == Mode.Prod)
       bind[AssetCtrl].to[AssetCtrlProd]
     else
@@ -63,6 +73,7 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
 
     bind[AuthSrv].to[CortexAuthSrv]
     bind[MigrationOperations].to[Migration]
+    bind[UserMapper].to[MultiUserMapperSrv]
     bindActor[AuditActor]("audit")
   }
 }
