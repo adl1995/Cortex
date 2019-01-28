@@ -72,16 +72,14 @@ export default class AuthService {
 
   ssoLogin(code, success, failure) {
     var url = angular.isDefined(code) ? './api/ssoLogin?code=' + code : './api/ssoLogin';
+    console.log(url)
     this.$http.post(url,
-        { }).success(function(data, status, headers, config) {
+        { }).then(function (response) {
+            success(response.data, response.status, response.headers, response.config);
+            console.log('response success', response);
+        }).catch(function (error) {
+            console.log('error', error);
+        });
 
-        if (angular.isFunction(success)) {
-            success(data, status, headers, config);
-        }
-    }).error(function(data, status, headers, config) {
-        if (angular.isFunction(failure)) {
-            failure(data, status, headers, config);
-        }
-    });
+    };
   }
-}

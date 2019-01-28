@@ -15,7 +15,7 @@ import org.elastic4play.models.BaseModelDef
 import org.elastic4play.services.auth.MultiAuthSrv
 import org.elastic4play.services.{ AuthSrv, MigrationOperations }
 import org.thp.cortex.controllers.{ AssetCtrl, AssetCtrlDev, AssetCtrlProd }
-import org.thp.cortex.services.{ MultiUserMapperSrv, UserMapper }
+import org.thp.cortex.services.mappers.{ MultiUserMapperSrv, UserMapper }
 
 class Module(environment: Environment, configuration: Configuration) extends AbstractModule with ScalaModule with AkkaGuiceSupport {
 
@@ -54,7 +54,6 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
       .foreach { authSrvClass ⇒
         authBindings.addBinding.to(authSrvClass)
       }
-
 
     reflectionClasses
       .getSubTypesOf(classOf[UserMapper])
