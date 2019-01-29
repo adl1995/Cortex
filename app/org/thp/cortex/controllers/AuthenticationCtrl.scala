@@ -3,6 +3,7 @@ package org.thp.cortex.controllers
 import javax.inject.{ Inject, Singleton }
 
 import play.api.mvc._
+import play.api.Logger
 import org.thp.cortex.models.UserStatus
 import scala.concurrent.{ ExecutionContext, Future }
 
@@ -24,6 +25,7 @@ class AuthenticationCtrl @Inject() (
     components: ControllerComponents,
     fieldsBodyParser: FieldsBodyParser,
     implicit val ec: ExecutionContext) extends AbstractController(components) {
+  private[AuthenticationCtrl] lazy val logger = Logger(s"module")
 
   @Timed
   def login: Action[Fields] = Action.async(fieldsBodyParser) { implicit request ⇒
@@ -52,10 +54,16 @@ class AuthenticationCtrl @Inject() (
           authContext ← authSrv.authenticate()
           user ← userSrv.get(authContext.userId)
         } yield {
-          if (user.status() == UserStatus.Ok)
+          if (user.status() == UserStatus.Ok) {
+            logger.info(s"user status OK")
+            logger.info(s"user $user")
+            logger.info(s"authContext $authContext")
             authenticated.setSessingUser(Ok, authContext)
-          else
+          }
+          else {
+            logger.info(s"user status not OK")
             throw AuthorizationError("Your account is locked")
+          }
         }) recover {
           // A bit of a hack with the status code, so that Angular doesn't reject the origin
           case OAuth2Redirect(redirectUrl, qp) ⇒ Redirect(redirectUrl, qp, status = OK)

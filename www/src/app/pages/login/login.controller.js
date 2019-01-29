@@ -48,12 +48,15 @@ export default class LoginController {
   ssoLogin(code) {
       this.AuthService.ssoLogin(code, function(data, status, headers) {
           var redirectLocation = headers().location;
+          console.log('redirectLocation', redirectLocation)
           if(angular.isDefined(redirectLocation)) {
               window.location = redirectLocation;
           } else {
               this.$state.go('app.cases');
           }
       }, function(data, status) {
+          console.log('data', data)
+          console.log('status', status)
           if (status === 520) {
               this.NotificationService.error('LoginController', data, status);
           } else {
